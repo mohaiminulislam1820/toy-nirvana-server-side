@@ -16,5 +16,25 @@ app.get('/',(req,res)=>{
     res.send('Toy Nirvana Api server running....');
 })
 
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@crud-practice.heeny6h.mongodb.net/?retryWrites=true&w=majority`;
+
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+app.get('/toys', async(req,res)=>{
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.find({}).toArray();
+    
+    res.send(result);
+
+})
+
 
 module.exports=app;
