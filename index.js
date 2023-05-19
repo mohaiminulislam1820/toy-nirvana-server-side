@@ -30,7 +30,17 @@ const client = new MongoClient(uri, {
 app.get('/toys', async(req,res)=>{
     const collection = await client.db('ToyNirvana').collection('toys');
 
-    const result=await collection.find({}).toArray();
+    const result=await collection.find({}).limit(20).toArray();
+    
+    res.send(result);
+
+})
+
+app.get('/category/:subCategory', async(req,res)=>{
+    const query={sub_category: req.params.subCategory}
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.find(query).toArray();
     
     res.send(result);
 
