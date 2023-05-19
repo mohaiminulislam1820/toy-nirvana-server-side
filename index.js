@@ -16,7 +16,7 @@ app.get('/',(req,res)=>{
     res.send('Toy Nirvana Api server running....');
 })
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@crud-practice.heeny6h.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
@@ -41,6 +41,16 @@ app.get('/category/:subCategory', async(req,res)=>{
     const collection = await client.db('ToyNirvana').collection('toys');
 
     const result=await collection.find(query).toArray();
+    
+    res.send(result);
+
+})
+
+app.get('/toy/:id', async(req,res)=>{
+    const query={_id: new ObjectId(req.params.id)}
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.findOne(query);
     
     res.send(result);
 
