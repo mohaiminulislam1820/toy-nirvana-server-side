@@ -56,5 +56,15 @@ app.get('/toy/:id', async(req,res)=>{
 
 })
 
+app.post('/addToy', async(req,res)=>{
+    const newToy=req.body;
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.insertOne(newToy);
+    
+    res.send(result);
+
+})
+
 
 module.exports=app;
