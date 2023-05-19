@@ -66,5 +66,15 @@ app.post('/addToy', async(req,res)=>{
 
 })
 
+app.get('/toys/:email', async(req,res)=>{
+    const query={seller_email: req.params.email}
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.find(query).toArray();
+    
+    res.send(result);
+
+})
+
 
 module.exports=app;
