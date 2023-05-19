@@ -76,5 +76,15 @@ app.get('/toys/:email', async(req,res)=>{
 
 })
 
+app.delete('/toy/:id', async(req,res)=>{
+    const query={_id: new ObjectId(req.params.id)}
+    const collection = await client.db('ToyNirvana').collection('toys');
+
+    const result=await collection.deleteOne(query);
+    
+    res.send(result);
+
+})
+
 
 module.exports=app;
