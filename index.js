@@ -8,12 +8,12 @@ app.use(express.json());
 
 const port = process.env.PORT || 4000;
 
-app.listen(port,()=>{
-    console.log('listening to ',port);
+app.listen(port, () => {
+  console.log('listening to ', port);
 })
 
-app.get('/',(req,res)=>{
-    res.send('Toy Nirvana Api server running....');
+app.get('/', (req, res) => {
+  res.send('Toy Nirvana Api server running....');
 })
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -27,64 +27,75 @@ const client = new MongoClient(uri, {
   }
 });
 
-app.get('/toys', async(req,res)=>{
-    const collection = await client.db('ToyNirvana').collection('toys');
+app.get('/toys', async (req, res) => {
+  const collection = await client.db('ToyNirvana').collection('toys');
 
-    const result=await collection.find({}).limit(20).toArray();
-    
-    res.send(result);
+  const result = await collection.find({}).limit(20).toArray();
 
-})
-
-app.get('/category/:subCategory', async(req,res)=>{
-    const query={sub_category: req.params.subCategory}
-    const collection = await client.db('ToyNirvana').collection('toys');
-
-    const result=await collection.find(query).toArray();
-    
-    res.send(result);
+  res.send(result);
 
 })
 
-app.get('/toy/:id', async(req,res)=>{
-    const query={_id: new ObjectId(req.params.id)}
-    const collection = await client.db('ToyNirvana').collection('toys');
+app.get('/category/:subCategory', async (req, res) => {
+  const query = { sub_category: req.params.subCategory }
+  const collection = await client.db('ToyNirvana').collection('toys');
 
-    const result=await collection.findOne(query);
-    
-    res.send(result);
+  const result = await collection.find(query).toArray();
 
-})
-
-app.post('/addToy', async(req,res)=>{
-    const newToy=req.body;
-    const collection = await client.db('ToyNirvana').collection('toys');
-
-    const result=await collection.insertOne(newToy);
-    
-    res.send(result);
+  res.send(result);
 
 })
 
-app.get('/toys/:email', async(req,res)=>{
-    const query={seller_email: req.params.email}
-    const collection = await client.db('ToyNirvana').collection('toys');
+app.get('/toy/:id', async (req, res) => {
+  const query = { _id: new ObjectId(req.params.id) }
+  const collection = await client.db('ToyNirvana').collection('toys');
 
-    const result=await collection.find(query).toArray();
-    
-    res.send(result);
+  const result = await collection.findOne(query);
 
-})
-
-app.delete('/toy/:id', async(req,res)=>{
-    const query={_id: new ObjectId(req.params.id)}
-    const collection = await client.db('ToyNirvana').collection('toys');
-
-    const result=await collection.deleteOne(query);
-    
-    res.send(result);
+  res.send(result);
 
 })
 
+app.post('/addToy', async (req, res) => {
+  const newToy = req.body;
+  const collection = await client.db('ToyNirvana').collection('toys');
 
-module.exports=app;
+  const result = await collection.insertOne(newToy);
+
+  res.send(result);
+
+})
+
+app.get('/toys/:email', async (req, res) => {
+  const query = { seller_email: req.params.email }
+  const collection = await client.db('ToyNirvana').collection('toys');
+
+  const result = await collection.find(query).toArray();
+
+  res.send(result);
+
+})
+
+app.delete('/toy/:id', async (req, res) => {
+  const query = { _id: new ObjectId(req.params.id) }
+  const collection = await client.db('ToyNirvana').collection('toys');
+
+  const result = await collection.deleteOne(query);
+
+  res.send(result);
+
+})
+
+app.patch('/toy/:id', async (req, res) => {
+  const query = { _id: new ObjectId(req.params.id) };
+  const updateDoc = { $set: req.body };
+
+  const collection = await client.db('ToyNirvana').collection('toys');
+
+  const result = await collection.updateOne(query, updateDoc);
+
+  res.send(result);
+
+})
+
+module.exports = app;
