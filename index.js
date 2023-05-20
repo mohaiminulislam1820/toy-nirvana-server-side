@@ -68,12 +68,12 @@ app.post('/addToy', async (req, res) => {
 
 app.get('/toys/:email', async (req, res) => {
   const query = { seller_email: req.params.email }
-  const sortValue=parseInt(req.query.sortOrder);
+  const sortValue = parseInt(req.query.sortOrder);
   let sortQuery;
-  if(sortValue===1 || sortValue===-1){
-    sortQuery={price: req.query.sortOrder};
-  } else sortQuery={};
-    
+  if (sortValue === 1 || sortValue === -1) {
+    sortQuery = { price: req.query.sortOrder };
+  } else sortQuery = {};
+
   const collection = await client.db('ToyNirvana').collection('toys');
 
   const result = await collection.find(query).sort(sortQuery).toArray();
@@ -99,6 +99,16 @@ app.patch('/toy/:id', async (req, res) => {
   const collection = await client.db('ToyNirvana').collection('toys');
 
   const result = await collection.updateOne(query, updateDoc);
+
+  res.send(result);
+
+})
+
+app.get('/search-toys', async (req, res) => {
+  const searchQuery = { name: { $regex: new RegExp(req.query.searchText, 'i') } }
+  const collection = await client.db('ToyNirvana').collection('toys');
+
+  const result = await collection.find(searchQuery).toArray();
 
   res.send(result);
 
