@@ -68,9 +68,15 @@ app.post('/addToy', async (req, res) => {
 
 app.get('/toys/:email', async (req, res) => {
   const query = { seller_email: req.params.email }
+  const sortValue=parseInt(req.query.sortOrder);
+  let sortQuery;
+  if(sortValue===1 || sortValue===-1){
+    sortQuery={price: req.query.sortOrder};
+  } else sortQuery={};
+    
   const collection = await client.db('ToyNirvana').collection('toys');
 
-  const result = await collection.find(query).toArray();
+  const result = await collection.find(query).sort(sortQuery).toArray();
 
   res.send(result);
 
